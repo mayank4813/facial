@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FaceAuth | Facial Authentication</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #d5e3e8;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 1rem;
+    }
+
+    /* Header */
+    .site-header {
+      background: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #3b62ce;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #374151;
+      font-weight: 500;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-outline {
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: #0f172a;
+    }
+
+    .btn-primary {
+      background: #3b82f6;
+      color: #edd0d0;
+    }
+
+    /* Hero Section */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      padding: 4rem 1rem;
+      background: linear-gradient(to bottom right, #f4f5f6, #fff);
+    }
+
+    .hero-text {
+      flex: 1 1 500px;
+    }
+
+    .hero-text h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .hero-text h1 span {
+      color: #3b82f6;
+    }
+
+    .hero-text p {
+      margin-top: 1rem;
+      color: #4b5563;
+    }
+
+    .hero-buttons {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .hero-image {
+      flex: 1 1 400px;
+    }
+
+    .hero-image img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 20px;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 4rem 1rem;
+      background: #ece2e2;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .features p {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 3rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: #75ace2;
+      padding: 1.5rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .feature-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      color: #6b7280;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .site-footer p {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="logo">👁️ FaceAuth</div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+    </ul>
+    <div class="header-buttons">
+      <button class="btn btn-primary" onclick="location.href='/recognize'">Get Started</button>
+      <button class="btn btn-outline" onclick="location.href='/admin/login'">Admin Login</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero container">
+    <div class="hero-text">
+      <h1>Secure Access With <span>Facial Recognition</span></h1>
+      <p>Our advanced facial authentication system provides seamless and secure access control for your applications and physical spaces.</p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary" onclick="location.href='/recognize'">Get Started</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Face Scan Icon" />
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features container">
+    <h2>Powerful Features</h2>
+    <p>Our facial authentication system comes with everything you need for secure and reliable face-based access control.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>📷 Face Detection</h3>
+        <p>Accurately detect and track faces in real-time video streams with advanced computer vision algorithms.</p>
+      </div>
+      <div class="feature-card">
+        <h3>👤 User Registration</h3>
+        <p>Simple process to register new users with multiple facial captures for improved recognition accuracy.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔐 Secure Authentication</h3>
+        <p>Robust facial recognition with confidence thresholds to ensure only authorized users gain access.</p>
+      </div>
+      <div class="feature-card">
+        <h3>👥 Multi-User Support</h3>
+        <p>Register and recognize multiple users with unique identifiers and custom access levels.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact" class="site-footer">
+    <p>&copy; 2025 FaceAuth. All rights reserved.</p>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    // Removed the demo alert message as requested
+  </script>
+</body>
+</html>
