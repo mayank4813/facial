@@ -1,0 +1,207 @@
+<!-- templates/recognize.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Face Recognition</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #ddd;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #eaeaea;
+      border-radius: 10px 10px 0 0;
+      transition: background 0.3s;
+      text-decoration: none;
+      color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 2px solid #ddd;
+    }
+    .tab.active {
+      background-color: #fff;
+      border-bottom: 2px solid #007bff;
+      color: #007bff;
+    }
+    .tab:hover {
+      background-color: #dcdcdc;
+    }
+    .recognition-container {
+      position: relative;
+      display: inline-block;
+      margin: 20px 0;
+    }
+    #videoFeed {
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      max-width: 100%;
+      height: auto;
+    }
+    .face-box {
+      position: absolute;
+      border: 3px solid #00ff00;
+      border-radius: 4px;
+    }
+    .face-label {
+      position: absolute;
+      background: rgba(0, 255, 0, 0.8);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    button {
+      display: block;
+      width: 100%;
+      background: #007bff;
+      color: white;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #f8f9fa;
+      min-height: 50px;
+      text-align: center;
+    }
+    .confidence {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="tabs">
+      <a href="/register" class="tab">Register</a>
+      <a href="/recognize" class="tab active">Recognize</a>
+    </div>
+    <h1>Face Recognition</h1>
+    <p>Click the button below to start the recognition process.</p>
+    
+    <div class="recognition-container">
+      <img id="videoFeed" style="display: none;" />
+      <div id="faceOverlay"></div>
+    </div>
+
+    <button onclick="startRecognition()" id="startButton">Start Recognition</button>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    const videoFeed = document.getElementById('videoFeed');
+    const faceOverlay = document.getElementById('faceOverlay');
+    const startButton = document.getElementById('startButton');
+    const status = document.getElementById('status');
+
+    async function startRecognition() {
+      startButton.disabled = true;
+      status.textContent = "Scanning... Please wait.";
+      videoFeed.style.display = 'none';
+      faceOverlay.innerHTML = '';
+
+      try {
+        const response = await fetch("/start-recognition");
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          // Display the captured frame
+          videoFeed.src = 'data:image/jpeg;base64,' + data.frame;
+          videoFeed.style.display = 'block';
+
+          // Clear previous face boxes
+          faceOverlay.innerHTML = '';
+
+          // Draw boxes and labels for each recognized face
+          data.recognized_people.forEach(person => {
+            const { name, confidence, position } = person;
+            const { x, y, width, height } = position;
+
+            // Create face box
+            const box = document.createElement('div');
+            box.className = 'face-box';
+            box.style.left = `${x}px`;
+            box.style.top = `${y}px`;
+            box.style.width = `${width}px`;
+            box.style.height = `${height}px`;
+
+            // Create label
+            const label = document.createElement('div');
+            label.className = 'face-label';
+            label.style.left = `${x}px`;
+            label.style.top = `${y - 30}px`;
+            label.innerHTML = `${name} <span class="confidence">${confidence}%</span>`;
+
+            faceOverlay.appendChild(box);
+            faceOverlay.appendChild(label);
+          });
+
+          status.innerHTML = `✅ Recognized ${data.recognized_people.length} face(s)`;
+        } else {
+          throw new Error(data.error);
+        }
+      } catch (err) {
+        status.textContent = "❌ " + (err.message || "Error occurred during recognition");
+      } finally {
+        startButton.disabled = false;
+      }
+    }
+
+    // Optional: Start continuous recognition
+    let recognitionInterval = null;
+
+    function startContinuousRecognition() {
+      if (recognitionInterval) {
+        clearInterval(recognitionInterval);
+      }
+      recognitionInterval = setInterval(startRecognition, 3000); // Every 3 seconds
+    }
+
+    function stopContinuousRecognition() {
+      if (recognitionInterval) {
+        clearInterval(recognitionInterval);
+        recognitionInterval = null;
+      }
+    }
+  </script>
+</body>
+</html>
